@@ -1,130 +1,125 @@
 import * as React from "react";
-import {
-	Flex,
-	Input,
-	Checkbox,
-	FlexProps,
-	Select,
-	IconButton,
-	Tooltip,
-} from "@chakra-ui/react";
-import { useState, State } from "@hookstate/core";
+import { useHookstate, State } from "@hookstate/core";
 import { JSONSchema7, JSONSchema7TypeName } from "../../JsonSchemaEditor.types";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { getDefaultSchema, DataType, random, handleTypeChange } from "../utils";
+import {
+  getDefaultSchema,
+  DataType,
+  random,
+  handleTypeChange,
+  FlexProps,
+  ITEM_COL_CLASSNAME,
+} from "../utils";
+import { Col, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { IconButton } from "../IconButton";
+import { TooltipWrapper } from "../TooltipWrapper";
+
 export interface SchemaArrayProps extends FlexProps {
-	schemaState: State<JSONSchema7>;
-	onSchemaChange: (results: string) => void;
-	isReadOnly: State<boolean>;
+  schemaState: State<JSONSchema7>;
+  onSchemaChange?: (results: string) => void;
+  isReadOnly: State<boolean>;
 }
+
 export const SchemaRoot: React.FunctionComponent<SchemaArrayProps> = (
-	props: React.PropsWithChildren<SchemaArrayProps>
+  props: React.PropsWithChildren<SchemaArrayProps>,
 ) => {
-	const state = useState(props.schemaState);
-	const isReadOnlyState = useState(props.isReadOnly);
+  const state = useHookstate(props.schemaState);
+  const isReadOnlyState = useHookstate(props.isReadOnly);
 
-	return (
-		<>
-			{props.onSchemaChange(JSON.stringify(state.value))}
-			<Flex
-				data-testid="jsonschema-editor"
-				direction="row"
-				wrap="nowrap"
-				size="sm"
-				mt={2}
-				mr={5}
-			>
-				<Input isDisabled placeholder="root" margin={2} variant="outline" />
-				<Tooltip
-					hasArrow
-					aria-label="All Required"
-					label="All Required"
-					placement="top"
-				>
-					<Checkbox
-						isDisabled={isReadOnlyState.value}
-						margin={2}
-						width={20}
-						colorScheme="blue"
-					/>
-				</Tooltip>
+  return (
+    <>
+      {props.onSchemaChange &&
+        props.onSchemaChange(JSON.stringify(state.value))}
+      <Form data-testid="jsonschema-editor">
+        <Row className="align-items-center">
+          <Col xs={"auto"} className={ITEM_COL_CLASSNAME}>
+            <Form.Control type="text" disabled placeholder="root" size="sm" />
+          </Col>
 
-				<Select
-					variant="outline"
-					isDisabled={isReadOnlyState.value}
-					value={state.type.value ?? ""}
-					size="sm"
-					margin={2}
-					placeholder="Choose root data type"
-					onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
-						const newSchema = handleTypeChange(
-							evt.target.value as JSONSchema7TypeName,
-							false
-						);
-						state.set(newSchema as JSONSchema7);
-					}}
-				>
-					<option key="object" value="object">
-						object
-					</option>
-					<option key="array" value="array">
-						array
-					</option>
-				</Select>
-				<Input
-					value={state.value?.title ?? ""}
-					isDisabled={isReadOnlyState.value}
-					size="sm"
-					margin={2}
-					variant="outline"
-					placeholder="Add Title"
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						state.title.set(evt.target.value);
-					}}
-				/>
-				<Input
-					value={state.value?.description ?? ""}
-					isDisabled={isReadOnlyState.value}
-					size="sm"
-					margin={2}
-					variant="outline"
-					placeholder="Add Description"
-					onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-						state.description.set(evt.target.value);
-					}}
-				/>
+          <Col xs={"auto"} className={ITEM_COL_CLASSNAME}>
+            <TooltipWrapper label={"All Required"}>
+              <Form.Check
+                disabled={isReadOnlyState.value}
+                inline
+                type="checkbox"
+                className="px-0 ms-0 me-0"
+              />
+            </TooltipWrapper>
+          </Col>
 
-				{state.value?.type === "object" && (
-					<>
-						<Tooltip
-							hasArrow
-							aria-label="Add Child Node"
-							label="Add Child Node"
-							placement="top"
-						>
-							<IconButton
-								isRound
-								isDisabled={isReadOnlyState.value}
-								size="sm"
-								mt={2}
-								mb={2}
-								mr={2}
-								variant="link"
-								colorScheme="green"
-								fontSize="16px"
-								icon={<IoIosAddCircleOutline />}
-								aria-label="Add Child Node"
-								onClick={() => {
-									const fieldName = `field_${random()}`;
-									(state.properties as State<{
-										[key: string]: JSONSchema7;
-									}>)[fieldName].set(getDefaultSchema(DataType.string));
-								}}
-							/>
-						</Tooltip>
-					</>
-				)}
-			</Flex>
-		</>
-	);
+          <Col xs={"auto"} className={ITEM_COL_CLASSNAME}>
+            <Form.Select
+              disabled={true}
+              value={state.type.value ?? ""}
+              size="sm"
+              onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
+                const newSchema = handleTypeChange(
+                  evt.target.value as JSONSchema7TypeName,
+                  false,
+                );
+                state.set(newSchema as JSONSchema7);
+              }}
+            >
+              <option key="object" value="object">
+                object
+              </option>
+            </Form.Select>
+          </Col>
+
+          <Col xs={"auto"} className={ITEM_COL_CLASSNAME}>
+            <Form.Control
+              type="text"
+              value={state.value?.title ?? ""}
+              disabled={isReadOnlyState.value}
+              size="sm"
+              placeholder="Add Title"
+              onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
+                state.title.set(evt.target.value);
+              }}
+            />
+          </Col>
+
+          <Col className={ITEM_COL_CLASSNAME}>
+            <Form.Control
+              type="text"
+              value={state.value?.description ?? ""}
+              disabled={isReadOnlyState.value}
+              size="sm"
+              placeholder="Add Description"
+              onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
+                state.description.set(evt.target.value);
+              }}
+            />
+          </Col>
+
+          {state.value?.type === "object" && (
+            <Col xs={"auto"} className={ITEM_COL_CLASSNAME}>
+              <OverlayTrigger
+                overlay={<Tooltip>Add Child Node</Tooltip>}
+                aria-label="Add Child Node"
+                placement="top"
+              >
+                <IconButton
+                  isDisabled={isReadOnlyState.value}
+                  size="sm"
+                  variant="link"
+                  colorScheme="green"
+                  aria-label="Add Child Node"
+                  onClick={() => {
+                    const fieldName = `field_${random()}`;
+                    (
+                      state.properties as State<{
+                        [key: string]: JSONSchema7;
+                      }>
+                    )[fieldName].set(getDefaultSchema(DataType.string));
+                  }}
+                  icon={<IoIosAddCircleOutline />}
+                />
+              </OverlayTrigger>
+            </Col>
+          )}
+        </Row>
+      </Form>
+    </>
+  );
 };

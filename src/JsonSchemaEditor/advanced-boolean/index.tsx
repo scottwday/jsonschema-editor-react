@@ -1,46 +1,40 @@
 import * as React from "react";
-import { Flex, FormLabel, Stack, Select } from "@chakra-ui/react";
 
 import { AdvancedItemStateProps } from "../../JsonSchemaEditor.types";
-import { useState } from "@hookstate/core";
+import { useHookstate } from "@hookstate/core";
+import { Col, Form, Row } from "react-bootstrap";
 
-export const AdvancedBoolean: React.FunctionComponent<AdvancedItemStateProps> = (
-	props: React.PropsWithChildren<AdvancedItemStateProps>
-) => {
-	const { itemStateProp } = props;
+export const AdvancedBoolean: React.FunctionComponent<
+  AdvancedItemStateProps
+> = (props: React.PropsWithChildren<AdvancedItemStateProps>) => {
+  const { itemStateProp } = props;
 
-	const item = useState(itemStateProp);
+  const item = useHookstate(itemStateProp);
 
-	return (
-		<Flex direction="column" wrap="nowrap">
-			<Stack
-				isInline
-				alignItems="center"
-				justifyContent="center"
-				alignContent="center"
-				m={1}
-			>
-				<FormLabel mr={2} htmlFor="default">
-					Default:{" "}
-				</FormLabel>
-				<Select
-					variant="outline"
-					value={(item.default.value as string) ?? ""}
-					size="sm"
-					margin={2}
-					placeholder="Choose data type"
-					onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
-						item.default.set(evt.target.value);
-					}}
-				>
-					<option key="true" value="true">
-						true
-					</option>
-					<option key="false" value="false">
-						false
-					</option>
-				</Select>
-			</Stack>
-		</Flex>
-	);
+  return (
+    <Form>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm={3} htmlFor="format">
+          Default:{" "}
+        </Form.Label>
+        <Col sm={9}>
+          <Form.Select
+            value={(item.default.value as string) ?? ""}
+            size="sm"
+            className="m-2"
+            onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
+              item.default.set(evt.target.value);
+            }}
+          >
+            <option key="true" value="true">
+              true
+            </option>
+            <option key="false" value="false">
+              false
+            </option>
+          </Form.Select>
+        </Col>
+      </Form.Group>
+    </Form>
+  );
 };

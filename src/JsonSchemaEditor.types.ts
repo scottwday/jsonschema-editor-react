@@ -5,7 +5,7 @@ export interface SchemaEditorProps {
    * Text component
    */
   data?: JSONSchema7 | undefined;
-  onSchemaChange: (results: string) => void;
+  onSchemaChange?: (results: string) => void;
   readOnly?: boolean;
 }
 

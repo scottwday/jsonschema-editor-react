@@ -5,15 +5,20 @@
 <p align="center">
   <a href="https://github.com/xojs/xo"><img src="https://img.shields.io/badge/code_style-XO-5ed9c7.svg"></a>➕
   <a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>➕
-  <a href="https://chakra-ui.com/"><img src="https://img.shields.io/badge/built%20with-chakra--ui-green"></a>➕
-<a href="https://optum.github.io/jsonschema-editor-react/"><img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg"></a>
+  <a href="https://optum.github.io/jsonschema-editor-react/"><img src="https://cdn.jsdelivr.net/gh/storybookjs/brand@master/badge/badge-storybook.svg"></a>
 </p>
+
+## (!) SD 2024-12-09: Forked to refactor to react-bootstrap
+
+- Removed chakra-ui, replaced with react-bootstrap components
+- Updated react, typescript, hookstate, storybook
+- I probably won't be maintaining this, please fork if there are issues.
 
 ## Description
 
 > JSON Schema is hypermedia ready, and ideal for annotating your existing JSON-based HTTP API. JSON Schema documents are identified by URIs, which can be used in HTTP Link headers, and inside JSON Schema documents to allow recursive definitions. - [json-schema.org](https://json-schema.org/)
 
-JsonSchemaEditor is a React component library that allows the easy generation of valid `Draft 07` JsonSchema from a UI,  so that it can be easily persisted in a schema management system.
+JsonSchemaEditor is a React component library that allows the easy generation of valid `Draft 07` JsonSchema from a UI, so that it can be easily persisted in a schema management system.
 
 Benefits include:
 
