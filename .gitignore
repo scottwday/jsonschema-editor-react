@@ -52,7 +52,8 @@ typings/
 .DS_Store
 
 # compiled server output
-dist
+# Keep /dist to allow for deployment from github
+#dist
 
 # storybook
 storybook-static
